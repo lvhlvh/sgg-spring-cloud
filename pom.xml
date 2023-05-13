@@ -12,6 +12,7 @@
     <description>sgg-spring-cloud</description>
     <modules>
         <module>cloud-provider-payment8001</module>
+        <module>cloud-consumer80</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -79,6 +80,14 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <!--
+                            加速paketo buildpack:
+                            https://stackoverflow.com/questions/68770380/why-paketobuildpacks-run-image-download-everytime
+                            https://stackoverflow.com/questions/68023763/spring-boot-buildpack-always-downloads-latest-packeto-images-from-git
+                        -->
+                        <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                    </image>
                 </configuration>
             </plugin>
         </plugins>
