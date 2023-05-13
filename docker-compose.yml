@@ -5,11 +5,15 @@ services:
     image: cloud-provider-payment8001:1.0-SNAPSHOT
     ports:
       - "8001:8001"
+      - "61211:61211"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db2019?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       DB_HOST: db
+      # for remote debug: https://github.com/paketo-buildpacks/debug
+      BPL_DEBUG_ENABLED: "true"
+      BPL_DEBUG_PORT: 61211
     depends_on:
       db:
         condition: service_healthy
@@ -31,8 +35,11 @@ services:
     image: cloud-consumer80:1.0-SNAPSHOT
     ports:
       - "80:80"
+      - "61212:61212"
     environment:
       PAYMENT_URL: http://payment_app:8001
+      BPL_DEBUG_ENABLED: "true"
+      BPL_DEBUG_PORT: 61212
     depends_on:
       - payment_app
 volumes:
