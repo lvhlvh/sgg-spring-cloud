@@ -1,6 +1,6 @@
 package com.lvhao.springcloud.service;
 
-import com.lvhao.springcloud.entity.Payment;
+import com.lvhao.entity.Payment;
 import org.apache.ibatis.annotations.Param;
 
 /**

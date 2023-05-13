@@ -1,7 +1,7 @@
 package com.lvhao.springcloud.service.impl;
 
+import com.lvhao.entity.Payment;
 import com.lvhao.springcloud.dao.PaymentDao;
-import com.lvhao.springcloud.entity.Payment;
 import com.lvhao.springcloud.service.PaymentService;
 import org.springframework.stereotype.Service;
 

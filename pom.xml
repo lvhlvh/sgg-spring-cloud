@@ -23,6 +23,7 @@
         <spring-cloud.version>2021.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
         <mybatis-spring-boot-starter.version>2.3.0</mybatis-spring-boot-starter.version>
+        <cloud-api-common.version>1.0</cloud-api-common.version>
     </properties>
 
     <dependencyManagement>
@@ -48,6 +49,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.lvhao</groupId>
+                <artifactId>cloud-api-common</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -65,6 +71,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.lvhao</groupId>
+            <artifactId>cloud-api-common</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,6 @@
 package com.lvhao.springcloud.dao;
 
-import com.lvhao.springcloud.entity.Payment;
+import com.lvhao.entity.Payment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

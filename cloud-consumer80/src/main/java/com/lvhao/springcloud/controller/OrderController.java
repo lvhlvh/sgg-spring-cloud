@@ -1,7 +1,7 @@
 package com.lvhao.springcloud.controller;
 
-import com.lvhao.springcloud.entity.CommonResult;
-import com.lvhao.springcloud.entity.Payment;
+import com.lvhao.entity.CommonResult;
+import com.lvhao.entity.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
