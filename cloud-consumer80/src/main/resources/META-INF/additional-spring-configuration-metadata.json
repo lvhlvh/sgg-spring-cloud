@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "payment.url",
+      "type": "java.lang.String",
+      "description": "payment服务的url地址."
+  }
+] }
