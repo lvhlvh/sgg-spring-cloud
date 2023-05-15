@@ -9,7 +9,7 @@ eureka:
     # 当前服务(eureka server)无需从eureka server获取registry
     fetch-registry: false
     service-url:
-      default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
       #  Netflix's original version of the Eureka Server avoids answering clients for a configurable period of time if
       # it starts with an empty registry. The waitTimeInMsWhenSyncEmpty property controls this behavior, and it was
       # designed so that clients would not get partial/empty registry information until the server has had enough time
