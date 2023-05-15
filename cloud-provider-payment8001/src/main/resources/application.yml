@@ -17,3 +17,12 @@ server:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.lvhao.entity
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EUREKA_INSTANCE_HOSTNAME:localhost}:${EUREKA_INSTANCE_PORT:7001}/eureka/
+  instance:
+    prefer-ip-address: true
