@@ -2,15 +2,14 @@ spring:
   application:
     name: cloud-payment-service
   # spring boot官方文档: 4.11. Working with SQL Databases
-    datasource:
-      url: jdbc:mysql://${DB_HOST:localhost}:3306/db2019?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: root
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/db2019?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
   sql:
     init:
       mode: always
       encoding: UTF-8
-
 
 server:
   port: 8001
