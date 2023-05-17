@@ -11,7 +11,7 @@
     <name>sgg-spring-cloud</name>
     <description>sgg-spring-cloud</description>
     <modules>
-        <module>cloud-provider-payment8001</module>
+        <module>cloud-provider-payment</module>
         <module>cloud-consumer80</module>
         <module>cloud-eureka-server</module>
     </modules>
