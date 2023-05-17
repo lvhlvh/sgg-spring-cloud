@@ -13,7 +13,7 @@
     <modules>
         <module>cloud-provider-payment8001</module>
         <module>cloud-consumer80</module>
-        <module>cloud-eureka-server7001</module>
+        <module>cloud-eureka-server</module>
     </modules>
     <properties>
         <java.version>17</java.version>

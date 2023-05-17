@@ -1,0 +1,82 @@
+# https://thepracticaldeveloper.com/spring-boot-service-discovery-eureka/
+# Spring in Action, 5th Edition, 13.2.2 Scaling Eureka
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${other.eureka.host}:${other.eureka.port}/eureka
+  peers:
+    peer1:
+      port: ${EUREKA_PEERS_PEER1_PORT:7001}
+      host: ${BASE_EUREKA_INSTANCE_HOSTNAME}1
+    peer2:
+      port: ${EUREKA_PEERS_PEER1_PORT:7002}
+      host: ${BASE_EUREKA_INSTANCE_HOSTNAME}2
+  server:
+    peer-node-read-timeout-ms: 2000
+
+---
+spring:
+  application:
+    name: eureka-cluster
+  config:
+    activate:
+      on-profile: peer1
+server:
+  port: ${eureka.peers.peer1.port}
+eureka:
+  instance:
+    hostname: ${eureka.peers.peer1.host}
+  client:
+    # 注册当前服务(eureka server)到eureka
+    register-with-eureka: true
+    # 当前服务(eureka server)从eureka server获取registry
+    fetch-registry: true
+      #  Netflix's original version of the Eureka Server avoids answering clients for a configurable period of time if
+      # it starts with an empty registry. The waitTimeInMsWhenSyncEmpty property controls this behavior, and it was
+      # designed so that clients would not get partial/empty registry information until the server has had enough time
+      # to build the registry. In the previous example, it is set to zero, to start answering clients as soon as possible.
+    # If not set, the default value for the server.waitTimeInMsWhenSyncEmpty is 5 minutes.
+    #                                                        ——《Pivotal Certified Professional Spring Developer Exam》
+  server:
+    wait-time-in-ms-when-sync-empty: 5
+
+other:
+  eureka:
+    port: ${eureka.peers.peer2.port}
+    host: ${eureka.peers.peer2.host}
+
+---
+spring:
+  application:
+    name: eureka-cluster
+  config:
+    activate:
+      on-profile: peer2
+server:
+  port: ${eureka.peers.peer2.port}
+eureka:
+  instance:
+    hostname: ${eureka.peers.peer2.host}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  server:
+    wait-time-in-ms-when-sync-empty: 5
+
+other:
+  eureka:
+    port: ${eureka.peers.peer1.port}
+    host: ${eureka.peers.peer1.host}
