@@ -11,6 +11,18 @@ spring:
       mode: always
       encoding: UTF-8
 
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 server:
   port: 8001
 
