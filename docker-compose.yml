@@ -34,8 +34,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
-  payment-app:
-    image: cloud-provider-payment8001:1.0-SNAPSHOT
+  payment-app1:
+    image: cloud-provider-payment:1.0-SNAPSHOT
     ports:
       - "8001:8001"
       - "61211:61211"
@@ -58,6 +58,30 @@ services:
         condition: service_healthy
       eureka-peer2:
         condition: service_healthy
+  payment-app2:
+    image: cloud-provider-payment:1.0-SNAPSHOT
+    ports:
+      - "8002:8001"
+      - "61212:61212"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db2019?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      DB_HOST: db
+      # 往eureka-peer1注册
+      EUREKA_INSTANCE_HOSTNAME: eureka-peer1
+      EUREKA_INSTANCE_PORT: 7001
+      # for remote debug: https://github.com/paketo-buildpacks/debug
+      BPL_DEBUG_ENABLED: "true"
+      BPL_DEBUG_PORT: 61212
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      eureka-peer1:
+        condition: service_healthy
+      eureka-peer2:
+        condition: service_healthy
   db:
     image: mysql:8.0
     environment:
@@ -67,7 +91,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - cloud-provider-payment8001:/var/lib/mysql
+      - sgg-spring-cloud-db-volume:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 20s
@@ -76,17 +100,19 @@ services:
     image: cloud-consumer80:1.0-SNAPSHOT
     ports:
       - "80:80"
-      - "61212:61212"
+      - "61213:61213"
     environment:
-      PAYMENT_URL: http://payment-app:8001
+      PAYMENT_URL: http://CLOUD-PAYMENT-SERVICE # application.name
       # 往eureka-peer1注册
       EUREKA_INSTANCE_HOSTNAME: eureka-peer1
       EUREKA_INSTANCE_PORT: 7001
       BPL_DEBUG_ENABLED: "true"
-      BPL_DEBUG_PORT: 61212
+      BPL_DEBUG_PORT: 61213
     restart: always
     depends_on:
-      payment-app:
+      payment-app1:
+        condition: service_started
+      payment-app2:
         condition: service_started
       eureka-peer1:
         condition: service_healthy
@@ -94,4 +120,4 @@ services:
         condition: service_healthy
 
 volumes:
-  cloud-provider-payment8001:
+  sgg-spring-cloud-db-volume:
