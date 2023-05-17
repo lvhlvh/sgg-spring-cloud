@@ -1,6 +1,39 @@
 version: "3.9"
 
+# https://stackoverflow.com/questions/36283908/re-using-environment-variables-in-docker-compose-yml
+x-eureka-configs: &eureka-configs
+  BASE_EUREKA_INSTANCE_HOSTNAME: eureka-peer
+  EUREKA_PEERS_PEER1_PORT: 7001
+  EUREKA_PEERS_PEER2_PORT: 7002
+
 services:
+  eureka-peer1:
+    image: cloud-eureka-server:1.0-SNAPSHOT
+    ports:
+      - "7001:7001"
+    environment:
+      <<: *eureka-configs
+      SPRING_PROFILES_ACTIVE: peer1
+    # https://stackoverflow.com/questions/57515333/how-to-do-a-health-check-of-a-spring-boot-application-running-in-a-docker-contai
+    healthcheck:
+      test: "curl --fail --silent localhost:7001/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+  eureka-peer2:
+    image: cloud-eureka-server:1.0-SNAPSHOT
+    ports:
+      - "7002:7002"
+    environment:
+      <<: *eureka-configs
+      SPRING_PROFILES_ACTIVE: peer2
+    healthcheck:
+      test: "curl --fail --silent localhost:7002/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
   payment-app:
     image: cloud-provider-payment8001:1.0-SNAPSHOT
     ports:
@@ -11,11 +44,19 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       DB_HOST: db
+      # 往eureka-peer2注册
+      EUREKA_INSTANCE_HOSTNAME: eureka-peer2
+      EUREKA_INSTANCE_PORT: 7002
       # for remote debug: https://github.com/paketo-buildpacks/debug
       BPL_DEBUG_ENABLED: "true"
       BPL_DEBUG_PORT: 61211
+    restart: always
     depends_on:
       db:
+        condition: service_healthy
+      eureka-peer1:
+        condition: service_healthy
+      eureka-peer2:
         condition: service_healthy
   db:
     image: mysql:8.0
@@ -38,9 +79,19 @@ services:
       - "61212:61212"
     environment:
       PAYMENT_URL: http://payment-app:8001
+      # 往eureka-peer1注册
+      EUREKA_INSTANCE_HOSTNAME: eureka-peer1
+      EUREKA_INSTANCE_PORT: 7001
       BPL_DEBUG_ENABLED: "true"
       BPL_DEBUG_PORT: 61212
+    restart: always
     depends_on:
-      - payment-app
+      payment-app:
+        condition: service_started
+      eureka-peer1:
+        condition: service_healthy
+      eureka-peer2:
+        condition: service_healthy
+
 volumes:
   cloud-provider-payment8001:
