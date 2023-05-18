@@ -48,7 +48,8 @@ services:
       EUREKA_INSTANCE_HOSTNAME: eureka-peer2
       EUREKA_INSTANCE_PORT: 7002
       # https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#how-do-i-enable-debugging
-      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61211
+      # https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#how-do-i-set-parameters-for-my-image-at-runtime
+      JDK_JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61211
     restart: always
     depends_on:
       db:
@@ -70,7 +71,7 @@ services:
       # 往eureka-peer1注册
       EUREKA_INSTANCE_HOSTNAME: eureka-peer1
       EUREKA_INSTANCE_PORT: 7001
-      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61212
+      JDK_JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61212
     restart: always
     depends_on:
       db:
@@ -103,7 +104,7 @@ services:
       # 往eureka-peer1注册
       EUREKA_INSTANCE_HOSTNAME: eureka-peer1
       EUREKA_INSTANCE_PORT: 7001
-      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61213
+      JDK_JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:61213
     restart: always
     depends_on:
       payment-app1:
